@@ -1,5 +1,6 @@
 package ru.spbau.bogomolov.scala.calculator
 
+import ru.spbau.bogomolov.scala.calculator.exceptions.{EvaluationFailedException, ParsingFailedException, UnmatchedBracketsException}
 import ru.spbau.bogomolov.scala.calculator.tokens.brackets.{Bracket, CloseBracket, OpenBracket}
 import ru.spbau.bogomolov.scala.calculator.tokens.operators._
 import ru.spbau.bogomolov.scala.calculator.tokens.Token
@@ -10,14 +11,18 @@ import scala.collection.mutable.ListBuffer
 object Calculator {
   private val supportedTokens = Array(Number, Plus, Minus, Divide, Multiply, Sinus, OpenBracket, CloseBracket)
 
+  @throws(classOf[ParsingFailedException])
+  @throws(classOf[EvaluationFailedException])
+  @throws(classOf[UnmatchedBracketsException])
   def compute(expression: String): Double = {
     val resultingTree = buildTree(tokenize(expression))
     if (resultingTree.tokens.isEmpty && (resultingTree.node != null)) {
       return resultingTree.node.evaluate
     }
-    throw new UnsupportedOperationException
+    throw new EvaluationFailedException("Expression wasn't parsed correctly")
   }
 
+  @throws(classOf[ParsingFailedException])
   private def tokenize(expression: String): List[Token] = {
     var list = new ListBuffer[Token]()
     var position = 0
@@ -31,14 +36,17 @@ object Calculator {
           found = true
         }
       }
-      if (!found) throw new UnsupportedOperationException
+      if (!found) throw new ParsingFailedException("Parsing failed at position " + position)
     }
     return list.toList
   }
+
+  @throws(classOf[UnmatchedBracketsException])
+  @throws(classOf[ParsingFailedException])
   private def buildTree(tokens: List[Token], node : Node = null, hadOpening : Boolean = false): BuildResult = {
     var currentNode = node
     if (tokens.isEmpty) {
-      if (hadOpening) throw new UnsupportedOperationException
+      if (hadOpening) throw new UnmatchedBracketsException("Expression contains unmatched opening bracket")
       else return BuildResult(node.getRoot, tokens)
     }
     tokens.head match {
@@ -51,7 +59,7 @@ object Calculator {
         } else if (hadOpening) {
           return BuildResult(node, tokens.tail)
         } else {
-          throw new UnsupportedOperationException
+          throw new UnmatchedBracketsException("Expression contains unmatched closing bracket")
         }
       case token => if (currentNode != null) {
         return buildTree(tokens.tail, currentNode.insertNode(new Node(token)), hadOpening)

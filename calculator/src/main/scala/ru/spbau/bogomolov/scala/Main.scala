@@ -8,6 +8,10 @@ object Main {
 
   def main(args: Array[String]): Unit = {
     val expression = StdIn.readLine()
-    println(Calculator.compute(expression.replaceAll("\\s", "")))
+    try {
+      println(Calculator.compute(expression.replaceAll("\\s", "")))
+    } catch {
+      case e : Exception => println(e.getMessage)
+    }
   }
 }

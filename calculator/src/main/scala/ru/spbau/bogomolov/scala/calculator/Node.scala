@@ -1,5 +1,6 @@
 package ru.spbau.bogomolov.scala.calculator
 
+import ru.spbau.bogomolov.scala.calculator.exceptions.{EvaluationFailedException, ParsingFailedException}
 import ru.spbau.bogomolov.scala.calculator.tokens.operators.Operator
 import ru.spbau.bogomolov.scala.calculator.tokens.Token
 
@@ -11,19 +12,20 @@ class Node(val token : Token) {
 
   def getRoot: Node = if (parent == this) parent else parent.getRoot
 
+  @throws(classOf[EvaluationFailedException])
   def evaluate: Double = {
     token match {
       case number: tokens.Number =>
         if (left == null && right == null) return number.value
-        else throw new UnsupportedOperationException
+        else throw new EvaluationFailedException("Evaluation of the expression failed")
       case operator: Operator =>
         if (left == null && right != null) return operator.compute(right.evaluate)
         else if (left != null && right != null) return operator.compute(left.evaluate, right.evaluate)
-        else throw new UnsupportedOperationException
-      case _ => throw new UnsupportedOperationException
+        else throw new EvaluationFailedException("Evaluation of the expression failed")
     }
   }
 
+  @throws(classOf[ParsingFailedException])
   def insertNode(node: Node): Node = token match {
     case _: Operator =>
       if (right == null) {
@@ -37,12 +39,12 @@ class Node(val token : Token) {
         currentNode = currentNode.parent
       }
       return currentNode.makeLeftChildOf(node)
-    case _ => throw new UnsupportedOperationException
   }
 
+  @throws(classOf[ParsingFailedException])
   private def hasLessPriority(node1: Node, node2: Node): Boolean = {
     if (!node1.token.isInstanceOf[Operator] || !node2.token.isInstanceOf[Operator]) {
-      throw new UnsupportedOperationException
+      throw new ParsingFailedException("Expression isn't correct")
     }
     return node1.token.asInstanceOf[Operator].priority < node2.token.asInstanceOf[Operator].priority
   }
