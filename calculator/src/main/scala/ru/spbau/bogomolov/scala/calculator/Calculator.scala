@@ -14,6 +14,7 @@ object Calculator {
   @throws(classOf[ParsingFailedException])
   @throws(classOf[EvaluationFailedException])
   @throws(classOf[UnmatchedBracketsException])
+  @throws(classOf[UnsupportedOperationException])
   def compute(expression: String): Double = {
     val resultingTree = buildTree(tokenize(expression))
     if (resultingTree.tokens.isEmpty && (resultingTree.node != null)) {
