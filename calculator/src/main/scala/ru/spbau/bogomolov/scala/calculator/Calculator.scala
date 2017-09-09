@@ -1,14 +1,14 @@
 package ru.spbau.bogomolov.scala.calculator
 
 import ru.spbau.bogomolov.scala.calculator.tokens.brackets.{Bracket, CloseBracket, OpenBracket}
-import ru.spbau.bogomolov.scala.calculator.tokens.operators.{Divide, Minus, Multiply, Plus}
+import ru.spbau.bogomolov.scala.calculator.tokens.operators._
 import ru.spbau.bogomolov.scala.calculator.tokens.Token
 import ru.spbau.bogomolov.scala.calculator.tokens.Number
 
 import scala.collection.mutable.ListBuffer
 
 object Calculator {
-  private val supportedTokens = Array(Number, Plus, Minus, Divide, Multiply, OpenBracket, CloseBracket)
+  private val supportedTokens = Array(Number, Plus, Minus, Divide, Multiply, Sinus, OpenBracket, CloseBracket)
 
   def compute(expression: String): Double = {
     val resultingTree = buildTree(tokenize(expression))
