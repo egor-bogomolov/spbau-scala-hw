@@ -8,9 +8,21 @@ import ru.spbau.bogomolov.scala.calculator.tokens.Number
 
 import scala.collection.mutable.ListBuffer
 
+/**
+  * Calculator for arithmetic expressions. They can contain numbers, +, -, /, *, sin(), (, ). Expression shouldn't
+  * contain any other symbols.
+  */
 object Calculator {
   private val supportedTokens = Array(Number, Plus, Minus, Divide, Multiply, Sinus, OpenBracket, CloseBracket)
 
+  /**
+    * @param expression - expression which result should be computed.
+    * @throws ParsingFailedException if expression was incorrect.
+    * @throws EvaluationFailedException if expression can't be computed.
+    * @throws UnmatchedBracketsException if expression has unmatched brackets.
+    * @throws UnsupportedOperationException if binary operator is used as unary one or opposite.
+    * @return result of computing.
+    */
   @throws(classOf[ParsingFailedException])
   @throws(classOf[EvaluationFailedException])
   @throws(classOf[UnmatchedBracketsException])
@@ -23,6 +35,9 @@ object Calculator {
     throw new EvaluationFailedException("Expression wasn't parsed correctly")
   }
 
+  /**
+    * Divides the expression in a list of tokens.
+    */
   @throws(classOf[ParsingFailedException])
   def tokenize(expression: String): List[Token] = {
     var list = new ListBuffer[Token]()
@@ -42,6 +57,14 @@ object Calculator {
     return list.toList
   }
 
+  /**
+    * Builds computation tree for an expression from list of tokens.
+    * @param tokens - list of tokens.
+    * @param node - node representing the most outer token in the string to the left (last token if there were no
+    *             brackets or root of the tree if prefix was contained in brackets).
+    * @param hadOpening - if there was an unmatched opening bracket to the left from current point.
+    * @return root of the computation tree that was built.
+    */
   @throws(classOf[UnmatchedBracketsException])
   @throws(classOf[ParsingFailedException])
   def buildTree(tokens: List[Token], node : Node = null, hadOpening : Boolean = false): BuildResult = {

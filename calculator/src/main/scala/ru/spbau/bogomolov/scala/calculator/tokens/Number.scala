@@ -1,5 +1,8 @@
 package ru.spbau.bogomolov.scala.calculator.tokens
 
+/**
+  * A token that represents Double-number.
+  */
 class Number extends Token {
   private[this] var value$: Double = 0
 
@@ -9,6 +12,9 @@ class Number extends Token {
     value$ = value
   }
 
+  /**
+    * If strings starts with number - reads it from the string and returns this instance of Number, otherwise (null, 0)
+    */
   override def parseFrom(string: String) : ParseResult = {
     if (string.charAt(0).isDigit) {
       var position = getEndPositionOfNumber(string)

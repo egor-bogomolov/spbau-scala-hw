@@ -4,14 +4,27 @@ import ru.spbau.bogomolov.scala.calculator.exceptions.{EvaluationFailedException
 import ru.spbau.bogomolov.scala.calculator.tokens.operators.Operator
 import ru.spbau.bogomolov.scala.calculator.tokens.Token
 
+/**
+  * A node in computation tree. Has a token which can be Operator or Number.
+  * If node represents an unary operator it has one right child.
+  * If node represents a binary operator it has 2 children.
+  * If node represents a number it has no children.
+  */
 class Node(val token : Token) {
 
   var left: Node = null
   var right: Node = null
   var parent: Node = this
 
+  /**
+    * @return root of the tree.
+    */
   def getRoot: Node = if (parent == this) parent else parent.getRoot
 
+  /**
+    * @throws EvaluationFailedException if tree contains invalid nodes (invalid number of children).
+    * @return result of computation of the expression that corresponds to the tree.
+    */
   @throws(classOf[EvaluationFailedException])
   def evaluate: Double = {
     token match {
@@ -25,6 +38,11 @@ class Node(val token : Token) {
     }
   }
 
+  /**
+    * Inserts a node in the tree according to rules of building of computation trees.
+    * @throws ParsingFailedException if nodes had invalid combination of tokens.
+    * @return node that was inserted (for simplicity of code)
+    */
   @throws(classOf[ParsingFailedException])
   def insertNode(node: Node): Node = token match {
     case _: Operator =>
@@ -41,6 +59,11 @@ class Node(val token : Token) {
       return currentNode.makeLeftChildOf(node)
   }
 
+  /**
+    * Checks that both nodes have operators as tokens and compares their priorities.
+    * @throws ParsingFailedException if any node hasn't operator as token.
+    * @return true if the first node's operator has less priority otherwise false.
+    */
   @throws(classOf[ParsingFailedException])
   def hasLessPriority(node1: Node, node2: Node): Boolean = {
     if (!node1.token.isInstanceOf[Operator] || !node2.token.isInstanceOf[Operator]) {
