@@ -6,9 +6,9 @@ import ru.spbau.bogomolov.scala.calculator.tokens.Token
 
 class Node(val token : Token) {
 
-  private var left: Node = null
-  private var right: Node = null
-  private var parent: Node = this
+  var left: Node = null
+  var right: Node = null
+  var parent: Node = this
 
   def getRoot: Node = if (parent == this) parent else parent.getRoot
 
@@ -42,7 +42,7 @@ class Node(val token : Token) {
   }
 
   @throws(classOf[ParsingFailedException])
-  private def hasLessPriority(node1: Node, node2: Node): Boolean = {
+  def hasLessPriority(node1: Node, node2: Node): Boolean = {
     if (!node1.token.isInstanceOf[Operator] || !node2.token.isInstanceOf[Operator]) {
       throw new ParsingFailedException("Expression isn't correct")
     }

@@ -5,6 +5,10 @@ class Number extends Token {
 
   def value: Double = value$
 
+  private def value_=(value: Double): Unit = {
+    value$ = value
+  }
+
   override def parseFrom(string: String) : ParseResult = {
     if (string.charAt(0).isDigit) {
       var position = getEndPositionOfNumber(string)
@@ -25,8 +29,27 @@ class Number extends Token {
     }
     return position
   }
+
+  def canEqual(other: Any): Boolean = other.isInstanceOf[Number]
+
+  override def equals(other: Any): Boolean = other match {
+    case that: Number =>
+      (that canEqual this) &&
+        value$ == that.value
+    case _ => false
+  }
+
+  override def hashCode(): Int = {
+    val state = Seq(value$)
+    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+  }
 }
 
 object Number extends Token {
   override def parseFrom(string: String) : ParseResult = new Number().parseFrom(string)
+  def withValue(v: Double): Number = {
+    val num = new Number()
+    num.value = v
+    return num
+  }
 }

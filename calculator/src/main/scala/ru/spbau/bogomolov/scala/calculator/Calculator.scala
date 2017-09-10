@@ -24,7 +24,7 @@ object Calculator {
   }
 
   @throws(classOf[ParsingFailedException])
-  private def tokenize(expression: String): List[Token] = {
+  def tokenize(expression: String): List[Token] = {
     var list = new ListBuffer[Token]()
     var position = 0
     while(position < expression.length) {
@@ -44,7 +44,7 @@ object Calculator {
 
   @throws(classOf[UnmatchedBracketsException])
   @throws(classOf[ParsingFailedException])
-  private def buildTree(tokens: List[Token], node : Node = null, hadOpening : Boolean = false): BuildResult = {
+  def buildTree(tokens: List[Token], node : Node = null, hadOpening : Boolean = false): BuildResult = {
     var currentNode = node
     if (tokens.isEmpty) {
       if (hadOpening) throw new UnmatchedBracketsException("Expression contains unmatched opening bracket")
