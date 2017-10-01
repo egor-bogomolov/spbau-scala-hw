@@ -11,30 +11,29 @@ class MultisetTest extends FunSuite {
   val limit = 9
 
   test("testEmptyGet") {
-    val multiset = new Multiset[Int]
+    val multiset = Multiset[Int]()
     assert(multiset.find(value).isEmpty)
   }
 
   test("testEmptyCount") {
-    val multiset = new Multiset[Int]
+    val multiset = Multiset[Int]()
     assert(multiset.count(value) == 0)
   }
 
   test("testAddGet") {
-    val multiset = new Multiset[Int]
-    multiset.add(value)
+    val multiset = Multiset(value)
     val findResult = multiset.find(value)
     assert(findResult.isDefined && findResult.get == value)
   }
 
   test("testAddCount") {
-    val multiset = new Multiset[Int]
+    val multiset = Multiset[Int]()
     multiset.add(value, count)
     assert(multiset.count(value) == count)
   }
 
   test("testForEach") {
-    val multiset = new Multiset[Int]
+    val multiset = Multiset[Int]()
     var counter = 0
     for (i <- 1 to value) {
       multiset.add(i, count)
@@ -44,7 +43,7 @@ class MultisetTest extends FunSuite {
   }
 
   test("testFilter") {
-    val multiset = new Multiset[Int]
+    val multiset = Multiset[Int]()
     for (i <- 1 to limit) {
       multiset.add(i)
     }
@@ -56,7 +55,7 @@ class MultisetTest extends FunSuite {
   }
 
   test("testMap") {
-    val multiset = new Multiset[Int]
+    val multiset = Multiset[Int]()
     for (i <- 1 to limit) {
       multiset.add(i, i * 2)
     }
@@ -78,8 +77,8 @@ class MultisetTest extends FunSuite {
   }
 
   test("testIntersect") {
-    val multiset1 = new Multiset[Int]
-    val multiset2 = new Multiset[Int]
+    val multiset1 = Multiset[Int]()
+    val multiset2 = Multiset[Int]()
     for (i <- 1 to limit) {
       multiset1.add(i, i)
       multiset2.add(limit - i + 1, i)
@@ -90,8 +89,8 @@ class MultisetTest extends FunSuite {
     }
   }
   test("testUnion") {
-    val multiset1 = new Multiset[Int]
-    val multiset2 = new Multiset[Int]
+    val multiset1 = Multiset[Int]()
+    val multiset2 = Multiset[Int]()
     for (i <- 1 to limit) {
       multiset1.add(i, i)
       multiset2.add(limit - i + 1, i)
@@ -100,6 +99,10 @@ class MultisetTest extends FunSuite {
     for (i <- 1 to limit) {
       assert(intersection.count(i) == limit + 1)
     }
+  }
+
+  test("testApply") {
+
   }
 
 }

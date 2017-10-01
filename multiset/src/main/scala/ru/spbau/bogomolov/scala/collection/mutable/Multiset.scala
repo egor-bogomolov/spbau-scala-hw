@@ -1,6 +1,7 @@
 package ru.spbau.bogomolov.scala.collection.mutable
 
 import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 /**
   * Mutable multiset.
@@ -90,5 +91,20 @@ class Multiset[A] {
     this.foreach((element, count) => union.add(element, count))
     that.foreach((element, count) => union.add(element, count))
     union
+  }
+}
+
+object Multiset {
+
+  def apply[A](elements: A*): Multiset[A] = {
+    val multiset = new Multiset[A]
+    for (element <- elements) multiset.add(element)
+    multiset
+  }
+
+  def unapplySeq[A](multiset: Multiset[A]): Option[mutable.Seq[A]] = {
+    val elements = ListBuffer.empty[A]
+    multiset.foreach((element, count) => elements ++= List.fill(count)(element))
+    Some(elements)
   }
 }
