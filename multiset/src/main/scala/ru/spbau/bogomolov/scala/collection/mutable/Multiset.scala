@@ -43,11 +43,30 @@ class Multiset[A] {
   }
 
   /**
-    * Returns another multiset that consists of elements that predicate accepts.
+    * Applies predicate to all elements of the [[Multiset]] and returns the multiset with elements that returned true.
     */
   def filter(predicate: A => Boolean): Multiset[A] = {
     val filtered = new Multiset[A]
     foreach((element, count) => if (predicate(element)) filtered.add(element, count))
     filtered
+  }
+
+  /**
+    * Maps function to all elements of the [[Multiset]] and returns the resulting multiset.
+    */
+  def map[B](func: A => B): Multiset[B] = {
+    val mapped = new Multiset[B]
+    foreach((element, count) => mapped.add(func(element), count))
+    mapped
+  }
+
+  /**
+    * Maps function to all elements of the [[Multiset]] and returns the resulting multiset.
+    */
+  def flatMap[B](func: A => mutable.Iterable[B]): Multiset[B] = {
+    val mapped = new Multiset[B]
+    foreach((element, count) =>
+      func(element).foreach(newElement => mapped.add(newElement, count)))
+    mapped
   }
 }

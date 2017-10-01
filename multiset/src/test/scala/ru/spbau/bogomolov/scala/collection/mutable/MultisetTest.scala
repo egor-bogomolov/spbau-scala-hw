@@ -2,6 +2,8 @@ package ru.spbau.bogomolov.scala.collection.mutable
 
 import org.scalatest.FunSuite
 
+import scala.collection.mutable
+
 class MultisetTest extends FunSuite {
 
   val value = 3
@@ -50,6 +52,28 @@ class MultisetTest extends FunSuite {
     for (i <- 1 to limit) {
       if (i % 2 == 0) assert(filtered.count(i) == 1)
       else assert(filtered.count(i) == 0)
+    }
+  }
+
+  test("testMap") {
+    val multiset = new Multiset[Int]
+    for (i <- 1 to limit) {
+      multiset.add(i, i * 2)
+    }
+    val mapped = multiset.map(value => Some(value))
+    for (i <- 1 to limit) {
+      assert(mapped.count(Some(i)) == i * 2)
+    }
+  }
+
+  test("testFlatMap") {
+    val multiset = new Multiset[Int]
+    for (i <- 1 to limit) {
+      multiset.add(i, i * 2)
+    }
+    val mapped = multiset.flatMap(value => mutable.Seq(Some(value), Some(value)))
+    for (i <- 1 to limit) {
+      assert(mapped.count(Some(i)) == i * 4)
     }
   }
 }
