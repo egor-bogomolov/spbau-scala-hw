@@ -71,7 +71,7 @@ class Multiset[A] {
   }
 
   /**
-    * Returns [[Multiset]] that contains each element min(count int this multiset, count in that multiset) times.
+    * Returns [[Multiset]] that contains each element minimum of sets' counts times.
     */
   def &(that: Multiset[A]): Multiset[A] = {
     val intersection = new Multiset[A]
@@ -83,14 +83,12 @@ class Multiset[A] {
   }
 
   /**
-    * Returns [[Multiset]] that contains each element max(count int this multiset, count in that multiset) times.
+    * Returns [[Multiset]] that contains each element sum of sets' counts times.
     */
   def |(that: Multiset[A]): Multiset[A] = {
     val union = new Multiset[A]
-    foreach((element, count) => {
-      val result = Math.max(count, that.count(element))
-      if (result != 0) union.add(element, result)
-    })
+    this.foreach((element, count) => union.add(element, count))
+    that.foreach((element, count) => union.add(element, count))
     union
   }
 }

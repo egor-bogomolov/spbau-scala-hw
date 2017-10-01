@@ -98,7 +98,7 @@ class MultisetTest extends FunSuite {
     }
     val intersection = multiset1 | multiset2
     for (i <- 1 to limit) {
-      assert(intersection.count(i) == Math.max(i, limit - i + 1))
+      assert(intersection.count(i) == limit + 1)
     }
   }
 
