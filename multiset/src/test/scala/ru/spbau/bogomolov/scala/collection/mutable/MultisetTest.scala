@@ -101,8 +101,12 @@ class MultisetTest extends FunSuite {
     }
   }
 
-  test("testApply") {
-
+  /** Uses variables in matching because order isn't specified. */
+  test("testPatternMatching") {
+    Multiset(1, 2, 3) match {
+      case Multiset(a, b, c) => assert(Multiset(a, b, c) == Multiset(1, 2, 3))
+      case _ => fail("Matching failed.")
+    }
   }
 
 }

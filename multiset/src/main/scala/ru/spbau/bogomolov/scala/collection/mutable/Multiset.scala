@@ -92,6 +92,11 @@ class Multiset[A] {
     that.foreach((element, count) => union.add(element, count))
     union
   }
+
+  override def equals(obj: scala.Any): Boolean = obj match {
+    case m: Multiset[A] => m.elementCount == elementCount
+    case _ => false
+  }
 }
 
 object Multiset {
