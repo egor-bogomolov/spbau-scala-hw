@@ -88,6 +88,7 @@ class MultisetTest extends FunSuite {
       assert(intersection.count(i) == Math.min(i, limit - i + 1))
     }
   }
+
   test("testUnion") {
     val multiset1 = Multiset[Int]()
     val multiset2 = Multiset[Int]()
@@ -109,4 +110,30 @@ class MultisetTest extends FunSuite {
     }
   }
 
+  test("testForFilter") {
+    val multiset = Multiset(1, 2, 3, 4)
+    val filtered = for {
+      element <- multiset
+      if element % 2 == 0
+    } yield element
+    assert(filtered == Multiset(2, 4))
+  }
+
+  test("testForMap") {
+    val multiset = Multiset(1, 2, 3, 4)
+    val filtered = for {
+      element <- multiset
+    } yield element * 2
+    assert(filtered == Multiset(2, 4, 6, 8))
+  }
+
+  test("testForFlatMap") {
+    val multiset1 = Multiset(1, 2, 3)
+    val multiset2 = mutable.Seq('a', 'b')
+    val filtered = for {
+      first <- multiset1
+      second <- multiset2
+    } yield (first, second)
+    assert(filtered == Multiset((1, 'a'), (1, 'b'),(2, 'a'), (2, 'b'), (3, 'a'), (3, 'b')))
+  }
 }

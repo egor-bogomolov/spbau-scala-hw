@@ -52,6 +52,8 @@ class Multiset[A] {
     filtered
   }
 
+  def withFilter(predicate: A => Boolean): Multiset[A] = filter(predicate)
+
   /**
     * Maps function to all elements of the [[Multiset]] and returns the resulting multiset.
     */
