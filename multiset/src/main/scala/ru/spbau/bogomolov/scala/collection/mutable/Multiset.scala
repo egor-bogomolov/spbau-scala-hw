@@ -29,6 +29,13 @@ class Multiset[A] {
   def count(element: A): Int = elementCount.getOrElse(element, 0)
 
   /**
+    * Calls function on each element of the set. Doesn't take into account count of element.
+    */
+  def foreach(func: A => Unit): Unit = {
+    for ((element, _) <- elementCount) func(element)
+  }
+
+  /**
     * Calls function on each element of the set. Takes into account count of element.
    */
   def foreach(func: (A, Int) => Unit): Unit = {
