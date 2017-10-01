@@ -76,4 +76,30 @@ class MultisetTest extends FunSuite {
       assert(mapped.count(Some(i)) == i * 4)
     }
   }
+
+  test("testIntersect") {
+    val multiset1 = new Multiset[Int]
+    val multiset2 = new Multiset[Int]
+    for (i <- 1 to limit) {
+      multiset1.add(i, i)
+      multiset2.add(limit - i + 1, i)
+    }
+    val intersection = multiset1 & multiset2
+    for (i <- 1 to limit) {
+      assert(intersection.count(i) == Math.min(i, limit - i + 1))
+    }
+  }
+  test("testUnion") {
+    val multiset1 = new Multiset[Int]
+    val multiset2 = new Multiset[Int]
+    for (i <- 1 to limit) {
+      multiset1.add(i, i)
+      multiset2.add(limit - i + 1, i)
+    }
+    val intersection = multiset1 | multiset2
+    for (i <- 1 to limit) {
+      assert(intersection.count(i) == limit + 1)
+    }
+  }
+
 }

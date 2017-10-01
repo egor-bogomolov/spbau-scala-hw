@@ -69,4 +69,28 @@ class Multiset[A] {
       func(element).foreach(newElement => mapped.add(newElement, count)))
     mapped
   }
+
+  /**
+    * Returns [[Multiset]] that contains each element min(count int this multiset, count in that multiset) times.
+    */
+  def &(that: Multiset[A]): Multiset[A] = {
+    val intersection = new Multiset[A]
+    foreach((element, count) => {
+      val result = Math.min(count, that.count(element))
+      if (result != 0) intersection.add(element, result)
+    })
+    intersection
+  }
+
+  /**
+    * Returns [[Multiset]] that contains each element max(count int this multiset, count in that multiset) times.
+    */
+  def |(that: Multiset[A]): Multiset[A] = {
+    val union = new Multiset[A]
+    foreach((element, count) => {
+      val result = Math.max(count, that.count(element))
+      if (result != 0) union.add(element, result)
+    })
+    union
+  }
 }
