@@ -19,6 +19,8 @@ class Multiset[A] {
     elementCount.update(element, currentCount + count)
   }
 
+  def apply(element: A): Option[Int] = elementCount.get(element)
+
   /**
     * If element is presented in the multiset then returns Option with it else an empty Option.
     */
