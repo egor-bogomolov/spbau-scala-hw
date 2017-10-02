@@ -5,19 +5,11 @@ import scala.collection.mutable.ListBuffer
 
 /**
   * Mutable multiset.
+  *
   * @tparam A type of elements in the set.
   */
 class Multiset[A] {
   private val elementCount = mutable.HashMap.empty[A, Int]
-
-  /**
-    * Add "element" to the set "count" times. By default add 1 time.
-    */
-  def add(element: A, count: Int = 1): Unit = {
-    if (count <= 0) throw new IllegalArgumentException("add should be called with positive count.")
-    val currentCount = elementCount.getOrElse(element, 0)
-    elementCount.update(element, currentCount + count)
-  }
 
   def apply(element: A): Option[Int] = elementCount.get(element)
 
@@ -27,23 +19,13 @@ class Multiset[A] {
   def find(element: A): Option[A] = elementCount.get(element).flatMap(_ => Some(element))
 
   /**
-    * Returns count of element in the multiset.
-    */
-  def count(element: A): Int = elementCount.getOrElse(element, 0)
-
-  /**
     * Calls function on each element of the set. Doesn't take into account count of element.
     */
   def foreach(func: A => Unit): Unit = {
     for ((element, _) <- elementCount) func(element)
   }
 
-  /**
-    * Calls function on each element of the set. Takes into account count of element.
-   */
-  def foreach(func: (A, Int) => Unit): Unit = {
-    for ((element, count) <- elementCount) func(element, count)
-  }
+  def withFilter(predicate: A => Boolean): Multiset[A] = filter(predicate)
 
   /**
     * Applies predicate to all elements of the [[Multiset]] and returns the multiset with elements that returned true.
@@ -54,7 +36,21 @@ class Multiset[A] {
     filtered
   }
 
-  def withFilter(predicate: A => Boolean): Multiset[A] = filter(predicate)
+  /**
+    * Add "element" to the set "count" times. By default add 1 time.
+    */
+  def add(element: A, count: Int = 1): Unit = {
+    if (count <= 0) throw new IllegalArgumentException("add should be called with positive count.")
+    val currentCount = elementCount.getOrElse(element, 0)
+    elementCount.update(element, currentCount + count)
+  }
+
+  /**
+    * Calls function on each element of the set. Takes into account count of element.
+    */
+  def foreach(func: (A, Int) => Unit): Unit = {
+    for ((element, count) <- elementCount) func(element, count)
+  }
 
   /**
     * Maps function to all elements of the [[Multiset]] and returns the resulting multiset.
@@ -88,12 +84,18 @@ class Multiset[A] {
   }
 
   /**
+    * Returns count of element in the multiset.
+    */
+  def count(element: A): Int = elementCount.getOrElse(element, 0)
+
+  /**
     * Returns [[Multiset]] that contains each element sum of sets' counts times.
     */
   def |(that: Multiset[A]): Multiset[A] = {
     val union = new Multiset[A]
-    this.foreach((element, count) => union.add(element, count))
-    that.foreach((element, count) => union.add(element, count))
+    val addToUnion = (element: A, count: Int) => union.add(element, count)
+    this.foreach(addToUnion)
+    that.foreach(addToUnion)
     union
   }
 
